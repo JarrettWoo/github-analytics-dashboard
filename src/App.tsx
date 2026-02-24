@@ -1,15 +1,17 @@
 import { useState } from 'react'
-import { getRepository } from './services/githubAPI'
-import type { Repository } from './types/github'
+import { getLanguages, getRepository } from './services/githubAPI'
+import type { Languages, Repository } from './types/github'
 import RepoSearch from './components/RepoSearch'
 import RepoOverview from './components/RepoOverview'
 import LoadingSpinner from './components/LoadingSpinner'
+import LanguageChart from './components/LanguageChart'
 
 
 function App() {
   const [repo, setRepo] = useState<Repository | null>(null)
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
+  const [languages, setLanguages] = useState<Languages | null>(null)
 
   const handleSearch = async (owner: string, repo: string) => {
     setLoading(true)
@@ -18,6 +20,9 @@ function App() {
     try {
       const data = await getRepository(owner, repo)
       setRepo(data)
+
+      const languages = await getLanguages(owner, repo)
+      setLanguages(languages)
     } catch (err) {
       setError('Repository not found. Please check the owner/repo name.')
       setRepo(null)
@@ -37,6 +42,7 @@ function App() {
       {error && <div className="text-center text-red-400">{error}</div>}
       
       {repo && <RepoOverview repo={repo} />}
+      {languages && <LanguageChart languages={languages} />}
     </div>
   )
 }
