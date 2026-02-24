@@ -1,7 +1,10 @@
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import { getRepository } from './services/githubAPI'
 import type { Repository } from './types/github'
 import RepoSearch from './components/RepoSearch'
+import RepoOverview from './components/RepoOverview'
+import LoadingSpinner from './components/LoadingSpinner'
+
 
 function App() {
   const [repo, setRepo] = useState<Repository | null>(null)
@@ -29,22 +32,11 @@ function App() {
       
       <RepoSearch onSearch={handleSearch} />
       
-      {loading && <div className="text-center">Loading...</div>}
+      {loading && <LoadingSpinner />}
       
       {error && <div className="text-center text-red-400">{error}</div>}
       
-      {repo && (
-        <div className="max-w-2xl mx-auto bg-gray-800 rounded-lg p-6">
-          <h2 className="text-3xl font-bold mb-2">{repo.full_name}</h2>
-          <p className="text-gray-300 mb-4">{repo.description}</p>
-          <div className="flex gap-6">
-            <div>⭐ {repo.stargazers_count.toLocaleString()}</div>
-            <div>🍴 {repo.forks_count.toLocaleString()}</div>
-            <div>👀 {repo.watchers_count.toLocaleString()}</div>
-            <div>🐛 {repo.open_issues_count.toLocaleString()} issues</div>
-          </div>
-        </div>
-      )}
+      {repo && <RepoOverview repo={repo} />}
     </div>
   )
 }
