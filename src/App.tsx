@@ -1,10 +1,11 @@
 import { useState } from 'react'
-import { getLanguages, getRepository } from './services/githubAPI'
-import type { Languages, Repository } from './types/github'
+import { getContributors, getLanguages, getRepository } from './services/githubAPI'
+import type { Contributor, Languages, Repository } from './types/github'
 import RepoSearch from './components/RepoSearch'
 import RepoOverview from './components/RepoOverview'
 import LoadingSpinner from './components/LoadingSpinner'
 import LanguageChart from './components/LanguageChart'
+import ContributorList from './components/ContributorList'
 
 
 function App() {
@@ -12,6 +13,7 @@ function App() {
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const [languages, setLanguages] = useState<Languages | null>(null)
+  const [contributors, setContributors] = useState<Contributor[] | null>(null)
 
   const handleSearch = async (owner: string, repo: string) => {
     setLoading(true)
@@ -23,6 +25,9 @@ function App() {
 
       const languages = await getLanguages(owner, repo)
       setLanguages(languages)
+
+      const contributors = await getContributors(owner, repo)
+      setContributors(contributors)
     } catch (err) {
       setError('Repository not found. Please check the owner/repo name.')
       setRepo(null)
@@ -43,6 +48,7 @@ function App() {
       
       {repo && <RepoOverview repo={repo} />}
       {languages && <LanguageChart languages={languages} />}
+      {contributors && <ContributorList contributors={contributors} />}
     </div>
   )
 }
