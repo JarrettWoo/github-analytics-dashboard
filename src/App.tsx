@@ -1,11 +1,13 @@
 import { useState } from 'react'
-import { getContributors, getLanguages, getRepository } from './services/githubAPI'
-import type { Contributor, Languages, Repository } from './types/github'
+import { getContributors, getLanguages, getRepository, getCommitActivity } from './services/githubAPI'
+import type { CommitActivity, Contributor, Languages, Repository } from './types/github'
 import RepoSearch from './components/RepoSearch'
 import RepoOverview from './components/RepoOverview'
 import LoadingSpinner from './components/LoadingSpinner'
 import LanguageChart from './components/LanguageChart'
 import ContributorList from './components/ContributorList'
+import CommitChart from './components/CommitChart'
+
 
 
 function App() {
@@ -14,6 +16,7 @@ function App() {
   const [error, setError] = useState<string | null>(null)
   const [languages, setLanguages] = useState<Languages | null>(null)
   const [contributors, setContributors] = useState<Contributor[] | null>(null)
+  const [commitActivity, setCommitActivity] = useState<CommitActivity[] | null>(null)
 
   const handleSearch = async (owner: string, repo: string) => {
     setLoading(true)
@@ -28,6 +31,9 @@ function App() {
 
       const contributors = await getContributors(owner, repo)
       setContributors(contributors)
+
+      const commitActivity = await getCommitActivity(owner, repo)
+      setCommitActivity(commitActivity)
     } catch (err) {
       setError('Repository not found. Please check the owner/repo name.')
       setRepo(null)
@@ -49,6 +55,7 @@ function App() {
       {repo && <RepoOverview repo={repo} />}
       {languages && <LanguageChart languages={languages} />}
       {contributors && <ContributorList contributors={contributors} />}
+      {commitActivity && <CommitChart commitActivity={commitActivity} />}
     </div>
   )
 }
