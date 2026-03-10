@@ -4,6 +4,20 @@ A real-time analytics dashboard built with React and TypeScript that visualizes 
 
 🔗 **[Live Demo](https://github-analytics-dashboard-jarrett.vercel.app)**
 
+## Screenshots
+
+### Dashboard Overview
+
+![Dashboard Overview](screenshots/dashboard-full.png)
+
+### Commit Activity Visualization
+
+![Commit Activity](screenshots/commit-chart.png)
+
+### Top Contributors
+
+![Top Contributors](screenshots/contributors.png)
+
 ## Features
 
 - 🔍 **Repository Search** - Search any public GitHub repository by owner/name
